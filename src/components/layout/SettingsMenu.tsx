@@ -3,7 +3,7 @@ import { Settings, X, Volume2, VolumeX, Sun, Moon, Globe } from 'lucide-react';
 import { useAudio } from '../../contexts/AudioContext';
 import { useTheme } from 'next-themes';
 import { useI18n } from '../../contexts/I18nContext';
-import { useAppSound } from '../../hooks/useAppSound';
+import { useAppSound, SOUND_ASSETS } from '../../hooks/useAppSound';
 import { cn } from '../../utils/cn';
 
 export function SettingsMenu({ className }: { className?: string }) {
@@ -13,7 +13,9 @@ export function SettingsMenu({ className }: { className?: string }) {
   const { muted, setMuted } = useAudio();
   const { theme, setTheme } = useTheme();
   const { language, setLanguage, t } = useI18n();
-  const [playClick] = useAppSound('/sounds/ui/click.mp3');
+  const [playOpenMenu] = useAppSound(SOUND_ASSETS.UI.OPEN_MENU);
+  const [playCloseMenu] = useAppSound(SOUND_ASSETS.UI.CLOSE_MENU);
+  const [playClick] = useAppSound(SOUND_ASSETS.UI.CLICK);
 
   // Close when clicking outside
   useEffect(() => {
@@ -33,8 +35,19 @@ export function SettingsMenu({ className }: { className?: string }) {
   };
 
   const handleToggle = () => {
-    playClick();
+    isOpen ? playCloseMenu() : playOpenMenu();
     setIsOpen(!isOpen);
+  };
+
+  const langDisplay = {
+    es: '🇪🇸 ES',
+    en: '🇬🇧 EN',
+    fr: '🇫🇷 FR'
+  };
+
+  const getThemeText = () => {
+    if (theme === 'system') return t('settings.visuals.sys');
+    return theme === 'dark' ? t('theme.dark') : t('theme.light');
   };
 
   return (
@@ -48,7 +61,7 @@ export function SettingsMenu({ className }: { className?: string }) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-animus-bg/95 dark:bg-animus-bg-dark/95 border-2 border-animus-cyan/50 backdrop-blur-md shadow-[0_0_15px_rgba(0,207,207,0.3)] z-50 p-4">
+        <div className="absolute right-0 top-full mt-2 w-64 bg-animus-bg/95 dark:bg-animus-bg-dark/95 border-2 border-animus-cyan/50 backdrop-blur-md shadow-[0_0_15px_rgba(0,207,207,0.3)] z-50 p-4">
           <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-animus-cyan" />
           <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-animus-cyan" />
           <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-animus-cyan" />
@@ -83,7 +96,7 @@ export function SettingsMenu({ className }: { className?: string }) {
                 <span>{t('settings.visuals')}</span>
               </div>
               <span className="text-xs font-bold text-animus-cyan uppercase">
-                {theme === 'system' ? t('settings.visuals.sys') : theme}
+                {getThemeText()}
               </span>
             </button>
 
@@ -96,8 +109,8 @@ export function SettingsMenu({ className }: { className?: string }) {
                 <Globe size={16} />
                 <span>{t('settings.lang')}</span>
               </div>
-              <span className="text-xs font-bold text-animus-gold uppercase">
-                {language}
+              <span className="text-xs font-bold text-animus-gold uppercase px-1">
+                {langDisplay[language]}
               </span>
             </button>
           </div>

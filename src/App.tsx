@@ -4,8 +4,9 @@
  */
 
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ThemeProvider } from 'next-themes';
+import { AnimatePresence, motion } from 'framer-motion';
 import { AudioProvider } from './contexts/AudioContext';
 import { I18nProvider } from './contexts/I18nContext';
 import { SettingsMenu } from './components/layout/SettingsMenu';
@@ -24,13 +25,14 @@ import FeedPage from './pages/FeedPage';
 
 function AppLayout() {
   const [showSplash, setShowSplash] = useState(true);
+  const location = useLocation();
 
   const handleSplashComplete = () => {
     setShowSplash(false);
   };
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col bg-animus-bg dark:bg-animus-bg-dark bg-[image:var(--background-image-hex-pattern)] bg-[position:center_center] bg-repeat bg-fixed transition-colors duration-300">
+    <div className="relative min-h-screen w-full overflow-x-hidden flex flex-col bg-animus-bg dark:bg-animus-bg-dark bg-[image:var(--background-image-hex-pattern)] bg-[position:center_center] bg-repeat bg-fixed transition-colors duration-300">
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
 
       {/* Decoración química de fondo */}
@@ -44,8 +46,11 @@ function AppLayout() {
       </div>
 
       {/* Header Global */}
-      <header className="sticky top-0 left-0 w-full z-50 bg-animus-bg/90 dark:bg-animus-bg-dark/95 backdrop-blur-md border-b border-animus-border/50 dark:border-animus-border-dark/60 shadow-md">
+      <header className="sticky top-0 left-0 w-full z-50 bg-animus-bg/90 dark:bg-animus-bg-dark/90 backdrop-blur-md border-b border-animus-border/30 dark:border-animus-border-dark/30 shadow-md">
         
+        {/* Línea decorativa inferior cian */}
+        <div className="absolute bottom-0 left-0 w-full h-[1.5px] bg-gradient-to-r from-transparent via-animus-cyan to-transparent opacity-60 shadow-[0_0_8px_rgba(0,207,207,0.8)]" />
+
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {/* Scanning line effect */}
           <div className="absolute inset-x-0 h-[1.5px] bg-animus-cyan/40 opacity-50 animate-[scan_3s_linear_infinite] shadow-[0_0_8px_rgba(0,153,153,0.8)] z-0" />
@@ -54,14 +59,14 @@ function AppLayout() {
           <div className="absolute inset-0 bg-[length:20px_20px] bg-[image:var(--background-image-dot-grid)] opacity-[0.15] dark:opacity-30 z-0 mix-blend-overlay" />
           
           {/* Decorative HUD corners */}
-          <div className="absolute top-0 left-0 w-12 h-3.5 border-t-2 border-l-2 border-animus-cyan/50 dark:border-animus-cyan/70 z-0" />
-          <div className="absolute bottom-0 right-0 w-12 h-3.5 border-b-2 border-r-2 border-animus-cyan/50 dark:border-animus-cyan/70 z-0" />
+          <div className="absolute top-0 left-0 w-12 h-3.5 border-t-2 border-l-2 border-animus-cyan/50 dark:border-animus-cyan/70 z-0 transition-all duration-1000 origin-top-left hover:scale-110" />
+          <div className="absolute bottom-0 right-0 w-12 h-3.5 border-b-2 border-r-2 border-animus-cyan/50 dark:border-animus-cyan/70 z-0 transition-all duration-1000 origin-bottom-right hover:scale-110" />
         </div>
 
         <div className="relative max-w-4xl mx-auto w-full flex justify-between items-center py-2 px-6 sm:py-3 sm:px-10 z-10">
           <div className="flex items-center gap-3">
             <div className="relative group ml-1 sm:ml-2">
-              <AnimusLogo className="w-12 h-12 md:w-16 md:h-16" />
+              <AnimusLogo className="w-12 h-12 md:w-16 md:h-16 drop-shadow-[0_0_8px_rgba(0,207,207,0.3)] group-hover:drop-shadow-[0_0_15px_rgba(0,207,207,0.5)] transition-all duration-500" />
             </div>
           </div>
 
@@ -92,15 +97,32 @@ function AppLayout() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col pt-6 pb-20 z-10 w-full max-w-4xl mx-auto items-center">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, filter: 'brightness(1.5) contrast(1.5) blur(10px) drop-shadow(0 0 10px rgba(0, 207, 207, 0.5))', x: -10, skewX: -5 }}
+            animate={{ opacity: 1, filter: 'brightness(1) contrast(1) blur(0px) drop-shadow(0 0 0px rgba(0, 207, 207, 0))', x: 0, skewX: 0 }}
+            exit={{ opacity: 0, filter: 'brightness(1.5) contrast(2) blur(10px) drop-shadow(0 0 10px rgba(255, 0, 0, 0.5))', x: 10, skewX: 5 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            className="w-full flex-1 flex flex-col"
+          >
+            <Routes location={location}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/memory" element={<MemoryPage />} />
+              <Route path="/tracker" element={<TrackerPage />} />
+              <Route path="/trivia" element={<TriviaPage />} />
+              <Route path="/guesswho" element={<GuessWhoPage />} />
+              <Route path="/feed" element={<FeedPage />} />
+            </Routes>
+          </motion.div>
+        </AnimatePresence>
 
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/memory" element={<MemoryPage />} />
-          <Route path="/tracker" element={<TrackerPage />} />
-          <Route path="/trivia" element={<TriviaPage />} />
-          <Route path="/guesswho" element={<GuessWhoPage />} />
-          <Route path="/feed" element={<FeedPage />} />
-        </Routes>
+        {/* Easter Egg / Info about authors */}
+        <div className="mt-8 text-center text-[8px] sm:text-[9px] font-mono tracking-widest text-animus-cyan/30 opacity-20 hover:opacity-100 transition-opacity duration-1000 cursor-default select-none group pb-2">
+          <p className="invisible group-hover:visible mb-1 transition-all">SYS.AUTH: OK</p>
+          <p>DEV_BY:// JUASMO</p>
+          <p>LORE_VISUALS_BY:// <span className="text-animus-gold/70 group-hover:text-animus-gold transition-colors">UBICYPHER</span></p>
+        </div>
       </main>
 
       <ChatBotFAB className="bottom-20" />

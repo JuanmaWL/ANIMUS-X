@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAppSound } from '../../hooks/useAppSound';
+import { useAppSound, SOUND_ASSETS } from '../../hooks/useAppSound';
 import { useI18n } from '../../contexts/I18nContext';
 import { GlitchText } from './GlitchText';
 import { HudDots } from './HudDots';
@@ -10,7 +10,7 @@ import { cn } from '../../utils/cn';
 export function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const [isVisible, setIsVisible] = useState(true);
   const [step, setStep] = useState(0);
-  const [playBoot] = useAppSound('/sounds/animus/boot.mp3');
+  const [playBoot] = useAppSound(SOUND_ASSETS.ANIMUS.BOOT);
   const { t } = useI18n();
 
   useEffect(() => {
