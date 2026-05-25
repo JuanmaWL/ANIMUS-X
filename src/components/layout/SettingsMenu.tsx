@@ -39,10 +39,10 @@ export function SettingsMenu({ className }: { className?: string }) {
     setIsOpen(!isOpen);
   };
 
-  const langDisplay = {
-    es: '🇪🇸 ES',
-    en: '🇬🇧 EN',
-    fr: '🇫🇷 FR'
+  const langDisplay: Record<string, { label: string, img: string }> = {
+    es: { label: 'ES', img: 'https://flagcdn.com/w20/es.png' },
+    en: { label: 'EN', img: 'https://flagcdn.com/w20/gb.png' },
+    fr: { label: 'FR', img: 'https://flagcdn.com/w20/fr.png' }
   };
 
   const getThemeText = () => {
@@ -109,9 +109,12 @@ export function SettingsMenu({ className }: { className?: string }) {
                 <Globe size={16} />
                 <span>{t('settings.lang')}</span>
               </div>
-              <span className="text-xs font-bold text-animus-gold uppercase px-1">
-                {langDisplay[language]}
-              </span>
+              <div className="flex items-center gap-1.5 px-1">
+                <img src={langDisplay[language].img} alt={language} className="w-4 h-3 rounded-[2px] opacity-80" />
+                <span className="text-xs font-bold text-animus-gold uppercase">
+                  {langDisplay[language].label}
+                </span>
+              </div>
             </button>
           </div>
         </div>

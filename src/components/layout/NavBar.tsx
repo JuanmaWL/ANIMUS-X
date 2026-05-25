@@ -30,7 +30,7 @@ export function NavBar({ className }: { className?: string }) {
       "pb-safe", // for iOS safe area if needed
       className
     )}>
-      <div className="flex items-center justify-around px-2 py-3 max-w-md mx-auto relative">
+      <div className="flex items-center justify-around px-2 py-3 max-w-md sm:max-w-xl md:max-w-2xl mx-auto relative">
         {/* Línea decorativa superior cian */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-animus-cyan to-transparent opacity-50 block" />
         
@@ -41,7 +41,7 @@ export function NavBar({ className }: { className?: string }) {
             end={item.to === '/'}
             onClick={() => playClick()}
             className={({ isActive }) => cn(
-              "flex flex-col items-center justify-center w-14 h-12 relative transition-colors duration-200 group",
+              "flex flex-col items-center justify-center w-14 sm:w-20 h-12 relative transition-colors duration-200 group",
               isActive 
                 ? "text-animus-cyan" 
                 : "text-animus-text-muted hover:text-animus-cyan/70 dark:text-animus-text-dark/50 dark:hover:text-animus-cyan/70"
