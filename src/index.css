@@ -1,11 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400..900;1,400..900&family=Orbitron:wght@400..900&family=Share+Tech+Mono&display=swap');
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Mokoto';
+  src: url('/fonts/Mokoto.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: '!Square Engine 050 Apex';
+  src: url('/fonts/SquareEngine050Apex.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-animus-bg: #e1e7e9;
-  --color-animus-panel: #cad5d9;
+  --color-animus-bg: #c4cfd4;
+  --color-animus-panel: #b8c4c9;
   --color-animus-border: #6daab0;
   --color-animus-bg-dark: #0F0F12;
   --color-animus-panel-dark: #1A1A22;
@@ -20,13 +34,42 @@
   --color-animus-text-dark: #E2E8EA;
 
   --font-display: "Orbitron", "Courier New", monospace;
+  --font-orbitron: "Orbitron", "Courier New", monospace;
   --font-mono: "Share Tech Mono", "Courier New", monospace;
-  --font-body: "Exo 2", system-ui, sans-serif;
-  --font-sans: "Exo 2", system-ui, sans-serif;
+  --font-body: "Share Tech Mono", system-ui, sans-serif;
+  --font-sans: "Share Tech Mono", system-ui, sans-serif;
+
+  --font-mokoto: 'Mokoto', var(--font-display);
+  --font-x-square: '!Square Engine 050 Apex', var(--font-display);
 
   --background-image-hex-pattern: url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%236daab0' stroke-width='1' stroke-opacity='0.15' fill='none'%3E%3Cpath d='M80 0L0 0 0 80'/%3E%3Cpath d='M40 0L40 80M0 40L80 40' stroke-opacity='0.05' stroke-dasharray='2 2'/%3E%3C/g%3E%3Ccircle cx='0' cy='0' r='1.5' fill='%236daab0' fill-opacity='0.5'/%3E%3Ccircle cx='80' cy='80' r='1.5' fill='%236daab0' fill-opacity='0.5'/%3E%3Ccircle cx='40' cy='40' r='1' fill='%236daab0' fill-opacity='0.3'/%3E%3C/svg%3E");
   --background-image-dot-grid: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%236daab0' fill-opacity='0.15'/%3E%3C/svg%3E");
 
+}
+
+@layer utilities {
+  .glitch-svg {
+    animation: glitch-anim-2 4s infinite linear alternate-reverse;
+  }
+}
+
+@keyframes glitch-anim {
+  0% { transform: translate(0) skew(0); text-shadow: 0_0_10px_#00f0e0,0_0_28px_rgba(0,240,224,0.55); }
+  2% { transform: translate(1px, -2px) skew(-2deg); text-shadow: 2px_0_0_rgb(255,0,0), -2px_0_0_rgb(0,255,255); }
+  4% { transform: translate(0) skew(0); text-shadow: 0_0_10px_#00f0e0,0_0_28px_rgba(0,240,224,0.55); }
+  100% { transform: translate(0) skew(0); text-shadow: 0_0_10px_#00f0e0,0_0_28px_rgba(0,240,224,0.55); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { transform: translate(0); opacity: 0.1; }
+  3% { transform: translate(-2px, 1px); opacity: 0.3; filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+  6% { transform: translate(0); opacity: 0.1; filter: none; }
+  100% { transform: translate(0); opacity: 0.1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 @layer base {
@@ -57,46 +100,33 @@
 }
 
 @layer components {
-  .glitch-text {
-    @apply relative inline-block font-display;
+  /* Animus Intro Styles */
+  .screen-glow {
+    background: radial-gradient(ellipse 70% 55% at 50% 44%, rgba(0,200,200,0.13) 0%, rgba(0,150,170,0.07) 40%, transparent 70%);
+    animation: screen-breathe 5s ease-in-out infinite;
   }
-  .glitch-text::before,
-  .glitch-text::after {
-    content: attr(data-text);
-    @apply absolute top-0 left-0 w-full h-full opacity-70 pointer-events-none;
+  @keyframes screen-breathe {
+    0%,100% { opacity:.7; }
+    50%      { opacity:1; }
   }
-  .glitch-text::before {
-    @apply text-animus-cyan;
-    animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
-    left: 2px;
-    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-    z-index: -1;
+  .label-animus {
+    font-family: var(--font-mokoto);
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 255, 255, 0.1)!important;
+    white-space: nowrap;
+    animation: label-pulse 4s ease-in-out infinite; 
   }
-  .glitch-text::after {
-    @apply text-animus-red;
-    animation: glitch-anim-2 3s infinite linear alternate-reverse;
-    left: -2px;
-    clip-path: polygon(0 80%, 100% 20%, 100% 100%, 0 100%);
-    z-index: -2;
+  @keyframes label-pulse {
+    0%,100% { text-shadow: 0 0 5px #fff, 0 0 14px rgba(0,220,255,.8), 0 0 34px rgba(0,180,255,.5), 0 2px 2px rgba(0,0,0,.6); }
+    50%      { text-shadow: 0 0 9px #fff, 0 0 24px rgba(0,220,255,1),  0 0 55px rgba(0,180,255,.8), 0 2px 2px rgba(0,0,0,.6); }
   }
-}
-
-@keyframes glitch-anim-1 {
-  0% { clip-path: polygon(0 20%, 100% 20%, 100% 21%, 0 21%); transform: translate(2px, 1px); }
-  20% { clip-path: polygon(0 60%, 100% 60%, 100% 65%, 0 65%); transform: translate(-2px, -1px); }
-  40% { clip-path: polygon(0 40%, 100% 40%, 100% 43%, 0 43%); transform: translate(1px, 2px); }
-  60% { clip-path: polygon(0 80%, 100% 80%, 100% 85%, 0 85%); transform: translate(-1px, 1px); }
-  80% { clip-path: polygon(0 10%, 100% 10%, 100% 15%, 0 15%); transform: translate(2px, -2px); }
-  100% { clip-path: polygon(0 30%, 100% 30%, 100% 35%, 0 35%); transform: translate(-2px, 2px); }
-}
-
-@keyframes glitch-anim-2 {
-  0% { clip-path: polygon(0 40%, 100% 40%, 100% 45%, 0 45%); transform: translate(-2px, -1px); }
-  20% { clip-path: polygon(0 10%, 100% 10%, 100% 15%, 0 15%); transform: translate(2px, 2px); }
-  40% { clip-path: polygon(0 60%, 100% 60%, 100% 62%, 0 62%); transform: translate(-1px, -2px); }
-  60% { clip-path: polygon(0 20%, 100% 20%, 100% 25%, 0 25%); transform: translate(1px, 1px); }
-  80% { clip-path: polygon(0 80%, 100% 80%, 100% 85%, 0 85%); transform: translate(-2px, -1px); }
-  100% { clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%); transform: translate(2px, 2px); }
+  .banner-scan::after {
+    content: '';
+    position: absolute;
+    left: -40%; top: 0; bottom: 0; width: 30%;
+    background: linear-gradient(90deg, transparent, rgba(0,240,224,.08), transparent);
+    animation: banner-scan-anim 5s linear infinite;
+  }
+  @keyframes banner-scan-anim { to { left: 140%; } }
 }
 
 @keyframes svg-glitch {
@@ -107,6 +137,25 @@
   47% { transform: translate(3px, -2px) skewX(5deg); filter: drop-shadow(2px 0 0 var(--color-animus-cyan)) drop-shadow(-2px 0 0 var(--color-animus-red)); }
   49% { transform: translate(0) skewX(0); filter: drop-shadow(0 0 0); }
   100% { transform: translate(0); }
+}
+
+@keyframes particle-explode {
+  0% { opacity: 1; transform: translate(0, 0) scale(1.5) rotate(0deg); filter: drop-shadow(0 0 10px currentColor); }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.5) rotate(var(--rot)); filter: drop-shadow(0 0 2px currentColor); }
+}
+
+.animate-particle-explode {
+  animation: particle-explode 1.2s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes wave-expand {
+  0% { transform: scale(0.95); opacity: 0.9; stroke-width: 4px; }
+  100% { transform: scale(1.15); opacity: 0; stroke-width: 1px; }
+}
+
+.animate-wave-expand {
+  transform-origin: 220px 250px;
+  animation: wave-expand 0.9s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
 }
 
 .glitch-svg {
@@ -150,4 +199,23 @@
   90% { opacity: 1; }
   100% { transform: translateY(0); opacity: 0; top: 110%; }
 }
+
+@keyframes slow-bg-move-hex {
+  0% { background-position: 0px 0px; }
+  100% { background-position: 120px 120px; }
+}
+
+.animate-slow-hex {
+  animation: slow-bg-move-hex 40s linear infinite;
+}
+
+@keyframes slow-bg-move-grid {
+  0% { background-position: 0px 0px; }
+  100% { background-position: -120px 60px; }
+}
+
+.animate-slow-grid {
+  animation: slow-bg-move-grid 30s linear infinite;
+}
+
 

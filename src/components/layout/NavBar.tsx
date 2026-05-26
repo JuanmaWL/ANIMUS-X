@@ -51,7 +51,7 @@ export function NavBar({ className }: { className?: string }) {
               <>
                 <div className="relative z-10 flex flex-col items-center">
                   <item.icon size={22} className={cn("mb-1 transition-all duration-300", isActive && "drop-shadow-[0_0_8px_rgba(0,207,207,0.8)] scale-110")} />
-                  <span className="text-[9px] font-display uppercase tracking-wider hidden sm:block truncate w-full text-center">
+                  <span className="text-[9px] font-orbitron uppercase tracking-wider hidden sm:block truncate w-full text-center">
                     {item.label}
                   </span>
                 </div>

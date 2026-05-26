@@ -68,7 +68,7 @@ export const esDict: Record<string, string> = {
   'dashboard.guesswho.desc': 'Verificación fotográfica',
   'dashboard.feed.label': 'TERMINAL DE INTEL',
   'dashboard.feed.desc': 'Actualidad de la Orden',
-  'splash.welcome': 'BIENVENIDO/A, ANALISTA',
+  'splash.welcome': 'BIENVENIDO, ANALISTA',
   'settings.title': 'Config. de Sistema',
   'settings.audio': 'Audio',
   'settings.audio.on': 'ON',

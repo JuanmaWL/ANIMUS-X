@@ -3,9 +3,10 @@ import { cn } from '../../utils/cn';
 
 interface HudFrameProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
+  className?: string;
 }
 
-export function HudFrame({ children, className, ...props }: HudFrameProps) {
+export const HudFrame: React.FC<HudFrameProps> = ({ children, className, ...props }) => {
   return (
     <div className={cn("relative p-4 border border-animus-border/30 dark:border-animus-border-dark/30 bg-animus-panel/20 dark:bg-animus-panel-dark/20 backdrop-blur-sm", className)} {...props}>
       {/* Esquinas (Corner Brackets) Cian */}

@@ -67,7 +67,7 @@ export function SettingsMenu({ className }: { className?: string }) {
           <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-animus-cyan" />
           <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-animus-cyan" />
           
-          <h3 className="font-display text-sm tracking-widest text-animus-red uppercase mb-4 text-center border-b border-animus-red/30 pb-2">
+          <h3 className="font-orbitron text-sm tracking-widest text-animus-red uppercase mb-4 text-center border-b border-animus-red/30 pb-2">
             {t('settings.title')}
           </h3>
           

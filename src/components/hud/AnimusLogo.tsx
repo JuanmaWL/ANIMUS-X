@@ -10,13 +10,13 @@ export function AnimusLogo({ className }: { className?: string }) {
         <polygon points="50,8 86,28 86,72 50,92 14,72 14,28" fill="currentColor" fillOpacity="0.1" />
         
         {/* Big X behind (moved up slightly) */}
-        <text x="50" y="50" textAnchor="middle" dominantBaseline="central" alignmentBaseline="central" className="font-display font-black text-animus-red opacity-80" fontSize="76" style={{ filter: 'drop-shadow(0px 0px 4px rgba(232,69,60,0.8))' }}>
+        <text x="50" y="50" textAnchor="middle" dominantBaseline="central" alignmentBaseline="central" className="font-x-square text-animus-red opacity-80" fontSize="76" style={{ filter: 'drop-shadow(0px 0px 4px rgba(232,69,60,0.8))' }}>
           X
         </text>
       </svg>
       
       {/* ANIMUS Text in front */}
-      <div className="relative font-display font-bold text-white text-[10px] sm:text-[11px] md:text-sm tracking-[0.3em] z-10 leading-none text-center uppercase" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,1), 0 0 6px rgba(0,0,0,0.8)' }}>
+      <div className="relative font-mokoto text-white text-[10px] sm:text-[11px] md:text-sm tracking-[0.3em] z-10 leading-none text-center uppercase" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,1), 0 0 6px rgba(0,0,0,0.8)' }}>
         ANIMUS
       </div>
     </div>

@@ -3,12 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ThemeProvider } from 'next-themes';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AudioProvider } from './contexts/AudioContext';
 import { I18nProvider } from './contexts/I18nContext';
+import { cn } from './utils/cn';
 import { SettingsMenu } from './components/layout/SettingsMenu';
 import { ChatBotFAB } from './components/layout/ChatBotFAB';
 import { NavBar } from './components/layout/NavBar';
@@ -25,11 +26,37 @@ import FeedPage from './pages/FeedPage';
 
 function AppLayout() {
   const [showSplash, setShowSplash] = useState(true);
+  const [isHoldingLogo, setIsHoldingLogo] = useState(false);
+  const [holdParticles, setHoldParticles] = useState<{ id: number; size: number; duration: number; delay: number; x: number; y: number; isHex: boolean }[]>([]);
+  const splashTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const location = useLocation();
 
   const handleSplashComplete = () => {
     setShowSplash(false);
   };
+
+  useEffect(() => {
+    if (isHoldingLogo) {
+      // Create a set of beautiful small square & hex particles emitting outwards
+      const newParticles = Array.from({ length: 8 }).map((_, i) => {
+        const angle = (i * 360) / 8 + Math.random() * 15;
+        const distance = 16 + Math.random() * 18;
+        const rad = (angle * Math.PI) / 180;
+        return {
+          id: i,
+          x: Math.cos(rad) * distance,
+          y: Math.sin(rad) * distance,
+          size: Math.random() > 0.5 ? 2.5 : 3.5,
+          isHex: Math.random() > 0.5,
+          delay: Math.random() * 0.3,
+          duration: 0.8 + Math.random() * 0.6,
+        };
+      });
+      setHoldParticles(newParticles);
+    } else {
+      setHoldParticles([]);
+    }
+  }, [isHoldingLogo]);
 
   return (
     <div className="relative min-h-screen w-full overflow-x-hidden flex flex-col bg-animus-bg dark:bg-animus-bg-dark bg-[image:var(--background-image-hex-pattern)] bg-[position:center_center] bg-repeat bg-fixed transition-colors duration-300">
@@ -65,8 +92,91 @@ function AppLayout() {
 
         <div className="relative max-w-4xl mx-auto w-full flex justify-between items-center py-2 px-6 sm:py-3 sm:px-10 z-10">
           <div className="flex items-center gap-3">
-            <div className="relative group ml-1 sm:ml-2">
-              <AnimusLogo className="w-12 h-12 md:w-16 md:h-16 drop-shadow-[0_0_8px_rgba(0,207,207,0.3)] group-hover:drop-shadow-[0_0_15px_rgba(0,207,207,0.5)] transition-all duration-500" />
+            <div 
+              className="relative group ml-1 sm:ml-2 cursor-pointer flex items-center justify-center"
+              onPointerDown={() => {
+                setIsHoldingLogo(true);
+                splashTimeoutRef.current = setTimeout(() => {
+                  setIsHoldingLogo(false);
+                  setShowSplash(true);
+                }, 3000);
+              }}
+              onPointerUp={() => { setIsHoldingLogo(false); if (splashTimeoutRef.current) clearTimeout(splashTimeoutRef.current); }}
+              onPointerLeave={() => { setIsHoldingLogo(false); if (splashTimeoutRef.current) clearTimeout(splashTimeoutRef.current); }}
+              onContextMenu={(e) => e.preventDefault()}
+            >
+              {isHoldingLogo && (
+                <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none mix-blend-screen overflow-visible">
+                  {/* Concentric high-tech glowing ring scaling outwards - much more compact */}
+                  <motion.div 
+                    className="absolute rounded-full border border-animus-cyan/50 shadow-[0_0_10px_rgba(0,255,255,0.4)]"
+                    initial={{ width: 44, height: 44, opacity: 0.6 }}
+                    animate={{ width: 80, height: 80, opacity: 0 }}
+                    transition={{ duration: 1.2, repeat: Infinity, ease: 'easeOut' }}
+                  />
+
+                  {/* Concentric target bracket closing down representing 3s hold progress - delicate and neat */}
+                  <motion.div 
+                    className="absolute rounded-full border border-dashed border-animus-cyan/40"
+                    initial={{ width: 90, height: 90, rotate: 0, opacity: 0 }}
+                    animate={{ width: 50, height: 50, rotate: 90, opacity: [0, 0.8, 0.6] }}
+                    transition={{ duration: 3, ease: 'linear' }}
+                  />
+
+                  {/* High-tech tiny square targeting corners closing in */}
+                  <motion.div 
+                    className="absolute border-t border-l border-animus-cyan/60 w-8 h-8"
+                    initial={{ scale: 1.3, opacity: 0 }}
+                    animate={{ scale: 0.95, opacity: [0, 0.7, 0.6] }}
+                    transition={{ duration: 3, ease: 'linear' }}
+                  />
+                  <motion.div 
+                    className="absolute border-b border-r border-animus-cyan/60 w-8 h-8"
+                    initial={{ scale: 1.3, opacity: 0 }}
+                    animate={{ scale: 0.95, opacity: [0, 0.7, 0.6] }}
+                    transition={{ duration: 3, ease: 'linear' }}
+                  />
+
+                  {/* Pulsing back-glow */}
+                  <div className="absolute w-10 h-10 rounded-full bg-animus-cyan blur-[12px] opacity-35 animate-pulse" />
+
+                  {/* Geometric small square & hexagonal particles flying in orbit */}
+                  {holdParticles.map((pt) => (
+                    <motion.div
+                      key={pt.id}
+                      className={cn(
+                        "absolute rounded-none pointer-events-none bg-animus-cyan/90 shadow-[0_0_4px_rgba(0,255,255,0.8)] z-20",
+                        pt.isHex ? "rotate-45" : "rotate-0"
+                      )}
+                      style={{
+                        width: pt.size,
+                        height: pt.size,
+                      }}
+                      initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                      animate={{
+                        x: pt.x,
+                        y: pt.y,
+                        opacity: [1, 0.6, 0],
+                        scale: [1, 1.2, 0.2],
+                        rotate: pt.isHex ? [45, 180] : [0, 90]
+                      }}
+                      transition={{
+                        duration: pt.duration,
+                        delay: pt.delay,
+                        repeat: Infinity,
+                        ease: "easeOut"
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+              <AnimusLogo className={cn(
+                  "w-12 h-12 md:w-16 md:h-16 transition-all duration-500 relative z-10 select-none",
+                  isHoldingLogo 
+                    ? "drop-shadow-[0_0_12px_rgba(0,255,255,0.7)] scale-105" 
+                    : "drop-shadow-[0_0_8px_rgba(0,207,207,0.3)] group-hover:drop-shadow-[0_0_15px_rgba(0,207,207,0.5)]"
+                )} 
+              />
             </div>
           </div>
 

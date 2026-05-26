@@ -15,7 +15,7 @@ export default function FeedPage() {
     <div className="w-full flex flex-col gap-6 p-4">
       <div className="flex items-center gap-3">
         <Newspaper className="w-8 h-8 text-animus-cyan" />
-        <h1 className="font-display text-2xl md:text-3xl text-animus-red font-black tracking-widest uppercase">
+        <h1 className="font-orbitron text-2xl md:text-3xl text-animus-red font-black tracking-widest uppercase">
           <GlitchText>{t('dashboard.feed.label')}</GlitchText>
         </h1>
       </div>
@@ -39,7 +39,7 @@ export default function FeedPage() {
             <div className="p-6 flex-1 flex flex-col justify-between z-10 bg-animus-bg/10 backdrop-blur-sm -mt-20">
               <div>
                 <a href={featuredNews.url} target="_blank" rel="noopener noreferrer" className="group shrink-0 inline-block">
-                  <h2 className="font-display font-medium text-xl sm:text-3xl text-animus-text dark:text-animus-text-dark leading-tight group-hover:text-animus-cyan transition-colors mb-2">
+                  <h2 className="font-orbitron font-medium text-xl sm:text-3xl text-animus-text dark:text-animus-text-dark leading-tight group-hover:text-animus-cyan transition-colors mb-2">
                     {featuredNews.title}
                   </h2>
                 </a>
@@ -79,7 +79,7 @@ export default function FeedPage() {
               </div>
               <div className="flex-1 flex flex-col justify-between">
                 <a href={news.url} target="_blank" rel="noopener noreferrer" className="group mb-2">
-                  <h3 className="font-display font-medium text-animus-text dark:text-animus-text-dark leading-tight text-sm sm:text-base group-hover:text-animus-cyan transition-colors line-clamp-2">
+                  <h3 className="font-orbitron font-medium text-animus-text dark:text-animus-text-dark leading-tight text-sm sm:text-base group-hover:text-animus-cyan transition-colors line-clamp-2">
                     {news.title}
                   </h3>
                 </a>
